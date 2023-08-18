@@ -16,7 +16,7 @@ jobs:
       - name: Update Comment
         run: |
           # Read the pull_request_template.md file
-          TEMPLATE_FILE=pull_request_template.md
+          TEMPLATE_FILE=./github/pull_request_template.md
           TEMPLATE_CONTENT=$(cat "$TEMPLATE_FILE")
 
           # Define the string you want to replace
