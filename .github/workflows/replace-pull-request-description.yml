@@ -1,0 +1,39 @@
+name: Update Comment in Pull Request
+
+on:
+  pull_request:
+    types:
+      - opened
+
+jobs:
+  update-comment:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - name: Update Comment
+        run: |
+          # Read the pull_request_template.md file
+          TEMPLATE_FILE=./github/pull_request_template.md
+          TEMPLATE_CONTENT=$(cat "$TEMPLATE_FILE")
+
+          # Define the string you want to replace
+          OLD_STRING="#testeUrl"
+          NEW_STRING="http://www.github.com"
+
+          # Replace the old string with the new string
+          UPDATED_CONTENT="${TEMPLATE_CONTENT//$OLD_STRING/$NEW_STRING}"
+
+          # Update the pull_request_template.md file with the modified content
+          echo "$UPDATED_CONTENT" > "$TEMPLATE_FILE"
+
+          # Commit the changes
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+          git commit -am "Update generated comment [skip ci]"
+          git push
+
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
